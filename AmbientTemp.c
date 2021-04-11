@@ -57,7 +57,7 @@ float hextoint(uint8_t* in)
 	return out;
 	
 }
-void func(void)
+void ReadTemp(void)
 {
     if (ready)
     {
@@ -89,12 +89,12 @@ void func(void)
             on = 1;
         else
             on = 0;
-        volatile taskStruct t = {&func, 1, 6};
+        volatile taskStruct t = {&ReadTemp, 1, 6};
         rerunMe(&delayed, t);
     }
     else
     {
-        volatile taskStruct t = {&func, 1, 4};
+        volatile taskStruct t = {&ReadTemp, 1, 4};
         rerunMe(&delayed, t);
         thresholdi = atoi((char *)threshold);
         if (thresholdi > -1)
@@ -106,13 +106,13 @@ void func(void)
     //control registers to force the temprature conversion
 }
 
-void func2(void)
+void TriggerAlarm(void)
 {
     if (on)
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
     else
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, 0);
-    volatile taskStruct t = {&func2, 2, 4};
+    volatile taskStruct t = {&TriggerAlarm, 2, 4};
     rerunMe(&delayed, t);
 }
 
@@ -189,8 +189,8 @@ int main(void)
     HAL_InitTick(TICK_INT_PRIORITY);
     SysTick_Config(SystemCoreClock / 20);
     init();
-    enqueue(&func, 1, 1);
-    enqueue(&func2, 2, 1);
+    enqueue(&ReadTemp, 1, 1);
+    enqueue(&TriggerAlarm, 2, 1);
     tempbuffer1[0] = 0x11;
     tempbuffer2[0] = 0x12;
     HAL_I2C_Master_Transmit(&hi2c1, 0xD0, tempbuffer1, 2, 10);
