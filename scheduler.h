@@ -56,7 +56,7 @@ void dispatch(void)
 
     while (delayed.current_sz > 0 && delayed.qTasks[0].delay == 0)
         insertt(&qu, *dequeue(&delayed));
-    if (qu.current_sz > 0)
+    while (qu.current_sz > 0)
         dequeue(&qu)->fPointer();
 }
 void swapTasks(taskStruct *one, taskStruct *two)
