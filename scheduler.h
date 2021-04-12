@@ -1,4 +1,4 @@
-void dispatch(void);
+
 typedef void (*fnPtr)(void);
 typedef struct task
 {
@@ -13,9 +13,10 @@ typedef struct tQueue
     int current_sz;
     taskStruct *qTasks;
 } queueStruct;
-
+void dispatch(void);
+void rerun(queueStruct *q, taskStruct t);
 taskStruct *dequeue(queueStruct *q);
-void rerunMe(queueStruct *q, taskStruct t);
+void rerunMe(fnPtr fPointer, int priority, int delay);
 void swapTasks(taskStruct *one, taskStruct *two);
 void init(void);
 void enqueue(fnPtr fPointer, int priority, int delay);
@@ -25,11 +26,18 @@ queueStruct qu;
 queueStruct delayed;
 taskStruct aa[100];
 taskStruct bb[100];
-void rerunMe(queueStruct *q, taskStruct t)
+void rerunMe(fnPtr fPointer, int priority, int delay)
+{
+    volatile taskStruct t = {fPointer, priority, delay};
+    if (delay == 0)
+        insertt(&qu, t);
+    else
+        rerun(&delayed, t);
+}
+void rerun(queueStruct *q, taskStruct t)
 {
     volatile int pos = q->current_sz++;
 
-    fnPtr x = t.fPointer;
     volatile struct task t1 = t;
     q->qTasks[pos] = t1;
     if (pos == 0)
@@ -74,8 +82,6 @@ void enqueue(fnPtr fPointer, int priority, int delay)
 void insertt(queueStruct *q, taskStruct t)
 {
     volatile int pos = q->current_sz++;
-
-    fnPtr x = t.fPointer;
     volatile struct task t1 = t;
     q->qTasks[pos] = t1;
     if (pos == 0)
