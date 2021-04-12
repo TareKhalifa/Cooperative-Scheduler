@@ -1,0 +1,3 @@
+Tasks with lower delays exit the delayed queue and get inserted again. Tasks with higher priority run first in the ready queue.
+The delays of t1,t2,t3,t4 are 1,4,7,6 respectively. After the first 4,2,3,1 because of the priorities,
+one (100 delay) runs 3 times until two runs(400 delay) then one runs after it since it has lower priority in the ready queue then one runs one more times (total 5) then four (600 delay) runs, then one runs for the 6th time after it since it also has lower priority than four, then three (700) and one's delay become zero but again three runs before one since it has the higher priority.
