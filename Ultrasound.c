@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "scheduler.h"
 int i = 0;
 uint8_t distance = 0;
 uint8_t flag = 0;
@@ -99,6 +100,7 @@ void readNow(void)
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
     HAL_Delay(10);
     __HAL_TIM_ENABLE_IT(&htim2, TIM_IT_CC1);
+    rerunMe(&readNow, 1, 1);
 }
 /* USER CODE END 0 */
 
@@ -106,8 +108,11 @@ void readNow(void)
   * @brief  The application entry point.
   * @retval int
   */
-
-
+void Buzzer(void)
+{
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
+    rerunMe(&Buzzer,1,(distance / 2) > 10 ? 10: (distance / 2) <4?1  : (distance / 2));
+}
 int main(void)
 {
     /* USER CODE BEGIN 1 */
@@ -142,17 +147,16 @@ int main(void)
     //SysTick_Config(SystemCoreClock);
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
-
+    init();
+    enqueue(&Buzzer, 1, 1);
+		enqueue(&readNow, 1, 1);
     while (1)
     {
         /* USER CODE END WHILE */
         if (i > 50)
         {
-						readNow();
-            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
-						HAL_Delay(distance);
+            dispatch();
             i = 0;
-						
         }
         /* USER CODE BEGIN 3 */
     }
