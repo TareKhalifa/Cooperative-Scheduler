@@ -1,5 +1,6 @@
 # Cooperative-Scheduler
 ## Scheduler:
+The scheduler includes several functions that take a task which is a void function that takes no arguments and adds that task to either a ready or a delayed queue. If a function is inserted into a ready queue, then at the next clock tick (50ms), the task will be dequeued and executed. If the taks is in the delayed queue, then the time remaining (sleeping time) until it is executed is decremented every tick until it is zero. When the sleeping time of a task in the priority queue is up, the task is then moved to the ready queue where it will be dequeued based on priority and executed. A function can be inserted to the ready queue either by calling the function enqueue or by using rerunMe and using a sleeping time (delay) of zero.
 #### Implementation:
 ##### 1. void init(void):
 This is the initialization function of the scheduler. It initializes the queue and the delayed queue capacity, current size, and tasks.
@@ -12,7 +13,7 @@ This function is used to take tasks to be isnerted into the queue. It takes the 
 ##### 5. void rerunMe(queueStruct *q, taskStruct t):
 This function is the one that a task uses to insert itself into the ready or the delayed queues. To insert itself into the queue, the function calls swapTasks function to take its right place in the queue based on its priority. The task chooses which queue it will be inserted in by sending a pointer to that queue when calling the function and a pointer to the task itself.
 ##### 6. taskStruct *dequeue(queueStruct *q):
-
+This function is used to dequeue ready tasks from the queue to be executed or to removed tasks from the delayed queue after their sleeping time is up. The function swaps the task at the head of the queue with adjacent tasks until it is the last item in the queue and then returns the task to either be executed or added to the ready queue.
 ##### 7. void func(void):
 This is a test function used as a dummy task to test the schedule.
 
