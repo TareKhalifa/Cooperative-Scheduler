@@ -52,8 +52,8 @@ float hextoint(uint8_t* in)
 		out+=(in[1]-'0');
 	else out+=(in[1]-'A'+10);
 	if(in[3]>=48 && in[3]<=57)
-		out+=((in[1]-'0')/16.0);
-	else out+=((in[1]-'A'+10)/16.0);
+		out+=((in[3]-'0')/16.0);
+	else out+=((in[3]-'A'+10)/16.0);
 	return out;
 	
 }
@@ -85,17 +85,18 @@ void ReadTemp(void)
 				out[1] = hexToAscii(tempbuffer1[1] & 0x0F);
 				
         currenttempf = hextoint(out);
+				sprintf((char*)f,"%f",currenttempf);
+				HAL_UART_Transmit(&huart1,f, 5, 10);
+				HAL_UART_Transmit(&huart1,newline, 2, 10);
         if (currenttempf > thresholdi)
             on = 1;
         else
             on = 0;
-        volatile taskStruct t = {&ReadTemp, 1, 6};
-        rerunMe(&delayed, t);
+        rerunMe(&ReadTemp, 1, 60);
     }
     else
     {
-        volatile taskStruct t = {&ReadTemp, 1, 4};
-        rerunMe(&delayed, t);
+        rerunMe(&ReadTemp, 1, 4);
         thresholdi = atoi((char *)threshold);
         if (thresholdi > -1)
         {
@@ -112,8 +113,7 @@ void TriggerAlarm(void)
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
     else
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, 0);
-    volatile taskStruct t = {&TriggerAlarm, 2, 4};
-    rerunMe(&delayed, t);
+    rerunMe(&TriggerAlarm, 2, 4);
 }
 
 /* Private includes ----------------------------------------------------------*/
