@@ -31,7 +31,12 @@ When the on flag is set to 1, it flashes the LED.
 ##### 3. USART1_IRQHandler():
 In the USART1 handler, the threshold value is received from the PC.
 #### Testing:
-
+This was tested by:
+1- giving the system a threshold value of 23 using Tera Term
+2- the values of the read temperature were displayed on Tera Term 
+3- the sensor was held to change the value of the temperature detected by it so that it can exceed the threshold
+4- the sensed temperature exceeded the threshold and the led flashed
+5- This is documented in this video: https://drive.google.com/file/d/1G8NIHeJZnZFpQHb7jk-d4coMnunMA7tw/view?usp=sharing
 ### 2. Parking Sensor:
 ![image](https://user-images.githubusercontent.com/52736885/114328084-d989e200-9b3b-11eb-8e80-a889c56a465c.png)
 
@@ -41,3 +46,8 @@ In this application, HC-SR04 ultrasound sensor is used to measure the distance b
 This function is responsible for the task of measuring the distance between the ultrasound sensor and the object. It changes the global variable of the distance so that the buzzer task can manage the duration between the beeps of the buzzer accordingly.
 ##### 2. Buzzer():
 This function is responsible for changing the duration between the beeps of the buzzer according to the distance. The duration between beeps is directly proportional to the distance between the object and the ultrasound sensor. It does that by calling rerunMe() function of the scheduler and putting the priority directly proportional to the distance measured by the MeasureDistance() task.
+#### Testing:
+This was tested by:
+1- holding the ultrasound sensor and changing its distance from a table
+2- The duration between the beeps were directly proportional to the distance between the sensor and the table
+3- This is documented in this video: https://drive.google.com/file/d/1RCxcgpXE1t9UBw4ZhyKzrU6FgpJPDs4e/view?usp=sharing
