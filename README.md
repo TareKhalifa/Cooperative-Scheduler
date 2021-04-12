@@ -1,4 +1,7 @@
 # Cooperative-Scheduler
+## Group Members:
+## Nada Askar 900171451
+## Tarek Khalifa 900172646
 ## Scheduler:
 The scheduler includes several functions that take a task which is a void function that takes no arguments and adds that task to either a ready or a delayed queue. If a function is inserted into a ready queue, then at the next clock tick (50ms), the task will be dequeued and executed. If the taks is in the delayed queue, then the time remaining (sleeping time) until it is executed is decremented every tick until it is zero. When the sleeping time of a task in the priority queue is up, the task is then moved to the ready queue where it will be dequeued based on priority and executed. A function can be inserted to the ready queue either by calling the function enqueue or by using rerunMe and using a sleeping time (delay) of zero.
 #### Implementation:
